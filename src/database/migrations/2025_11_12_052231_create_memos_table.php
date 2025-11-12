@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * migrationファイル
+ * Laravelでデータベースのテーブル構造をコードで定義するファイル
+ * 設計書兼スクリプトみたいなもの
+ */
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -7,7 +13,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * up()メソッド
+     * 
+     * マイグレーションを「実行した」ときにやること
+     * 
+     * memosテーブルをこういう構成で作ってほしい
+     * 
+     * docker compose exec app php src/artisan migrate
      */
     public function up(): void
     {
@@ -20,7 +32,11 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * down()メソッド
+     * 
+     * マイグレーションを「巻き戻す（ロールバック）」ときにやること
+     * 
+     * docker compose exec app php src/artisan migrate:rollback
      */
     public function down(): void
     {
