@@ -53,6 +53,22 @@ mysql> show create table memos;
 
 # 作成手順
 
+## 流れ
+
+- モデル & リソースコントローラー & マイグレーション
+- マイグレーション編集
+- マイグレーション実行
+- モデル設定
+- ルーティング
+- コントローラ実装
+- ビュー作成
+  - ベースレイアウト
+  - 共通フォーム
+  - 一覧
+  - 新規作成
+  - 編集
+  - 詳細
+
 ## モデル & リソースコントローラー & マイグレーション
 
 ```bash
@@ -62,49 +78,10 @@ docker compose exec app php src/artisan make:model Memo -mcr
 # -r  : resourceスタイルのアクション一式
 ```
 
-## マイグレーション編集
-
-```php
-// database/migrations/xxxx_xx_xx_create_memos_table.php
-public function up(): void
-{
-    Schema::create('memos', function (Blueprint $table) {
-        $table->id();
-        $table->string('title', 100);
-        $table->text('content')->nullable();
-        $table->timestamps();
-    });
-}
-```
-
 ## マイグレーション実行
 
 ```bash
 docker compose exec app php src/artisan migrate
-```
-
-## モデル設定
-
-```php
-// app/Models/Memo.php
-class Memo extends Model
-{
-    use HasFactory;
-
-    protected $fillable = ['title', 'content'];
-}
-```
-
-## ルーティング
-
-```php
-// routes/web.php
-
-use App\Http\Controllers\MemoController;
-use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () { return redirect()->route('memos.index'); });
-Route::resource('memos', MemoController::class);
 ```
 
 ## コントローラ実装
