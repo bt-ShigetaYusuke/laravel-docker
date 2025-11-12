@@ -1,0 +1,48 @@
+# Laravel本体は src/ にあるので、パスに src/ をつける
+
+# Laravel 標準 ---------------------------------------------------
+/src/vendor/
+/src/node_modules/
+/src/npm-debug.log
+/src/yarn-error.log
+/src/.env
+/src/.env.backup
+/src/.env.local
+/src/.env.*.backup
+
+# Laravel キャッシュ・ログ ---------------------------------------
+/src/storage/*.key
+/src/storage/app/public/*
+/src/storage/debugbar/
+/src/storage/framework/cache/*
+/src/storage/framework/sessions/*
+/src/storage/framework/views/*
+/src/storage/logs/*
+
+# Bootstrap キャッシュ
+/src/bootstrap/cache/*.php
+!/src/bootstrap/cache/.gitignore
+
+# IDE / エディタ関連 ---------------------------------------------
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# OS / Docker / ツール -------------------------------------------
+docker-compose.override.yml
+*.pid
+*.seed
+*.log
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# PHPUnit
+/src/.phpunit.result.cache
+
+# Composer / npm lock (プロジェクト運用方針で判断)
+# /src/composer.lock
+# /src/package-lock.json
