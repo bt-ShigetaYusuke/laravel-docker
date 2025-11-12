@@ -2,6 +2,10 @@
 
 - `src/database/migrations/2025_11_12_052231_create_memos_table.php`
 - `src/app/Models/Memo.php`
+- `src/app/Http/Controllers/MemoController.php`
+- `src/resources/views/layouts/memo.blade.php`
+- `src/resources/views/memos/_form.blade.php`
+- `src/resources/views/memos/index.blade.php`
 
 # mysql
 
@@ -60,14 +64,25 @@ mysql> show create table memos;
 - マイグレーション実行
 - モデル設定
 - ルーティング
-- コントローラ実装
-- ビュー作成
-  - ベースレイアウト
-  - 共通フォーム
-  - 一覧
-  - 新規作成
-  - 編集
-  - 詳細
+- 一覧
+  - コントローラ実装
+  - ビュー作成
+    - ベースレイアウト
+    - 共通フォーム
+    - 一覧
+  - 表示確認
+- 新規作成
+  - コントローラ実装
+  - ビュー作成
+    - 新規作成
+- 編集
+  - コントローラ実装
+  - ビュー作成
+    - 編集
+- 詳細
+  - コントローラ実装
+  - ビュー作成
+    - 詳細
 
 ## モデル & リソースコントローラー & マイグレーション
 
@@ -88,17 +103,6 @@ docker compose exec app php src/artisan migrate
 
 ```php
 // app/Http/Controllers/MemoController.php
-
-public function index()
-{
-    $q = request('q');
-    $memos = \App\Models\Memo::when($q, fn($query) =>
-        $query->where('title', 'like', "%$q%")
-              ->orWhere('content', 'like', "%$q%")
-    )->latest()->paginate(10)->withQueryString();
-
-    return view('memos.index', compact('memos', 'q'));
-}
 
 public function create()
 {
@@ -145,90 +149,6 @@ public function destroy(\App\Models\Memo $memo)
 ```
 
 ## ビュー作成
-
-### ベースレイアウト
-
-```php
-// resources/views/layouts/app.blade.php
-<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <title>@yield('title','Memo App')</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-  <div class="container">
-    <a class="navbar-brand" href="{{ route('memos.index') }}">Memo</a>
-    <a class="btn btn-sm btn-primary" href="{{ route('memos.create') }}">新規作成</a>
-  </div>
-</nav>
-
-<div class="container">
-  @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-  @endif
-  @yield('content')
-</div>
-</body>
-</html>
-```
-
-### 共通フォーム
-
-```php
-// resources/views/memos/_form.blade.php
-@csrf
-<div class="mb-3">
-  <label class="form-label">タイトル</label>
-  <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
-         value="{{ old('title', $memo->title ?? '') }}" required maxlength="100">
-  @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
-</div>
-<div class="mb-3">
-  <label class="form-label">内容</label>
-  <textarea name="content" rows="6" class="form-control @error('content') is-invalid @enderror">{{ old('content', $memo->content ?? '') }}</textarea>
-  @error('content') <div class="invalid-feedback">{{ $message }}</div> @enderror
-</div>
-<button class="btn btn-primary">保存</button>
-<a href="{{ route('memos.index') }}" class="btn btn-secondary">戻る</a>
-```
-
-### 一覧
-
-```php
-// resources/views/memos/index.blade.php
-@extends('layouts.app')
-@section('title','メモ一覧')
-@section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="h3 m-0">メモ一覧</h1>
-  <form method="GET" class="d-flex gap-2">
-    <input type="search" name="q" class="form-control" placeholder="検索…" value="{{ $q }}">
-    <button class="btn btn-outline-secondary">検索</button>
-  </form>
-</div>
-
-@if($memos->count())
-  <div class="list-group mb-3">
-    @foreach($memos as $memo)
-      <a class="list-group-item list-group-item-action" href="{{ route('memos.show',$memo) }}">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">{{ $memo->title }}</h5>
-          <small class="text-muted">{{ $memo->updated_at->diffForHumans() }}</small>
-        </div>
-        <p class="mb-1 text-muted">{{ Str::limit($memo->content, 120) }}</p>
-      </a>
-    @endforeach
-  </div>
-  {{ $memos->links() }}
-@else
-  <p class="text-muted">まだメモがないよ。右上から作成してみて！</p>
-@endif
-@endsection
-```
 
 ### 新規作成
 
