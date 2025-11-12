@@ -54,19 +54,52 @@ class MemoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 新規作成画面
      */
     public function create()
     {
-        //
+        return view('memos.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 新しいメモをDBに保存する処理
+     * 
+     * Request $request :
+     *   フォームから送られてきたHTTPリクエストをLaravelが自動で渡してくれる
      */
     public function store(Request $request)
     {
-        //
+        /**
+         * バリデーション
+         * 
+         * エラーがあると自動で前のページへリダイレクトして
+         * エラーメッセージをセッションに保存する
+         * 
+         * OKならバリデーション済みデータだけを $validated に返す
+         */
+        $validated = $request->validate([
+            'title'   => ['required', 'string', 'max:100'],
+            'content' => ['nullable', 'string'],
+        ]);
+
+        /**
+         * DBに保存
+         * 
+         * Memoモデルの create() メソッドで、
+         * $validated のデータをそのままDBの memos テーブルに INSERT する
+         * 
+         * create() は「Laravelが用意したEloquentの標準メソッド」で、
+         * 「新しいレコードをサクッと作成するための便利ショートカット」
+         */
+        \App\Models\Memo::create($validated);
+
+        /**
+         * /memos へリダイレクトする
+         * 
+         * セッションに一時的なメッセージを保存し、
+         * リダイレクト先ページでこれを使ってアラートを表示できる
+         */
+        return redirect()->route('memos.index')->with('success', '作成したよ');
     }
 
     /**

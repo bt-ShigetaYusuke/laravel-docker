@@ -13,6 +13,11 @@
   @yield('content') に埋め込まれる
 --}}
 @section('content')
+
+{{--
+  
+--}}
+
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1 class="h3 m-0">メモ一覧</h1>
 

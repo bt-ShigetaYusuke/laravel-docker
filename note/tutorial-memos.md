@@ -104,22 +104,6 @@ docker compose exec app php src/artisan migrate
 ```php
 // app/Http/Controllers/MemoController.php
 
-public function create()
-{
-    return view('memos.create');
-}
-
-public function store(Request $request)
-{
-    $validated = $request->validate([
-        'title'   => ['required','string','max:100'],
-        'content' => ['nullable','string'],
-    ]);
-
-    \App\Models\Memo::create($validated);
-    return redirect()->route('memos.index')->with('success', '作成したよ');
-}
-
 public function show(\App\Models\Memo $memo)
 {
     return view('memos.show', compact('memo'));
@@ -149,20 +133,6 @@ public function destroy(\App\Models\Memo $memo)
 ```
 
 ## ビュー作成
-
-### 新規作成
-
-```php
-// resources/views/memos/create.blade.php
-@extends('layouts.app')
-@section('title','新規メモ')
-@section('content')
-<h1 class="h3 mb-3">新規メモ</h1>
-<form method="POST" action="{{ route('memos.store') }}">
-  @include('memos._form')
-</form>
-@endsection
-```
 
 ### 編集
 
