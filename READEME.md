@@ -22,107 +22,6 @@ laravel-docker/
 └─ docker-compose.yml
 ```
 
-## docker-compose.yml
-
-```yml
-services:
-  app:
-    build:
-      context: ./docker/php
-    volumes:
-      - ./:/var/www/html
-    depends_on:
-      - mysql
-
-  web:
-    image: nginx:alpine
-    ports:
-      - "1025:80" # → http://localhost:1025 でLaravel表示
-    volumes:
-      - ./:/var/www/html
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - app
-
-  mysql:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: app_db
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: app_pass
-      TZ: Asia/Tokyo
-    ports:
-      - "2025:3306"
-    volumes:
-      - dbdata:/var/lib/mysql
-
-  phpmyadmin:
-    image: phpmyadmin:latest
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: app_user
-      PMA_PASSWORD: app_pass
-      UPLOAD_LIMIT: 256M
-    ports:
-      - "2025:80" # → http://localhost:2025 でphpMyAdmin
-
-volumes:
-  dbdata:
-```
-
-## docker/php/Dockerfile
-
-```dockerfile
-FROM php:8.3-fpm-alpine
-
-# 必要ライブラリ & PHP拡張
-RUN apk add --no-cache \
-      bash git unzip icu-dev libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev oniguruma-dev \
-      libxml2-dev zlib-dev curl-dev \
-  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-  && docker-php-ext-install -j$(nproc) \
-      pdo_mysql mbstring exif pcntl bcmath intl gd opcache
-
-# Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# 推しの設定(お好みで)
-RUN echo "memory_limit=512M\nupload_max_filesize=64M\npost_max_size=64M\nmax_execution_time=120\n" > /usr/local/etc/php/conf.d/dev.ini
-
-WORKDIR /var/www/html
-```
-
-## docker/nginx/default.conf
-
-```nginx
-server {
-    listen 80;
-    server_name localhost;
-    root /var/www/html/public;
-    index index.php index.html;
-
-    charset utf-8;
-    client_max_body_size 64M;
-
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location ~ \.php$ {
-        fastcgi_pass app:9000;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    location ~* \.(css|js|jpg|jpeg|png|gif|webp|svg|ico|woff2?)$ {
-        expires 7d;
-        access_log off;
-    }
-}
-```
-
 # 開発環境起動
 
 ## プロジェクト直下で
@@ -266,7 +165,7 @@ laravel-docker-app-1          laravel-docker-app   "docker-php-entrypoi…"   ap
 laravel-docker-mysql-1        mysql:8.0            "docker-entrypoint.s…"   mysql        4 minutes ago    Up 4 minutes    0.0.0.0:2025->3306/tcp, [::]:2025->3306/tcp
 laravel-docker-phpmyadmin-1   phpmyadmin:latest    "/docker-entrypoint.…"   phpmyadmin   37 minutes ago   Up 37 minutes   0.0.0.0:3035->80/tcp, [::]:3035->80/tcp
 laravel-docker-web-1          nginx:alpine         "/docker-entrypoint.…"   web          37 minutes ago   Up 25 minutes   0.0.0.0:1025->80/tcp, [::]:1025->80/tcp
-PS C:\workspace\laravel-docker> 
+PS C:\workspace\laravel-docker>
 PS C:\workspace\laravel-docker> docker inspect $(docker compose ps -q mysql) --format '{{json .Config.Env}}' | jq
 [
   "MYSQL_DATABASE=app_db",
@@ -281,7 +180,7 @@ PS C:\workspace\laravel-docker> docker inspect $(docker compose ps -q mysql) --f
   "MYSQL_VERSION=8.0.44-1.el9",
   "MYSQL_SHELL_VERSION=8.0.44-1.el9"
 ]
-PS C:\workspace\laravel-docker> 
+PS C:\workspace\laravel-docker>
 PS C:\workspace\laravel-docker> docker compose exec mysql mysql -uroot -proot -e "SELECT host,user FROM mysql.user;"
 >>
 mysql: [Warning] Using a password on the command line interface can be insecure.
