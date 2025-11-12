@@ -1,3 +1,7 @@
+# 変更ファイルリスト
+
+- `src/database/migrations/2025_11_12_052231_create_memos_table.php`
+
 # 作成手順
 
 ## モデル & リソースコントローラー & マイグレーション
@@ -9,7 +13,7 @@ docker compose exec app php src/artisan make:model Memo -mcr
 # -r  : resourceスタイルのアクション一式
 ```
 
-### マイグレーション編集
+## マイグレーション編集
 
 ```php
 // database/migrations/xxxx_xx_xx_create_memos_table.php
@@ -24,7 +28,7 @@ public function up(): void
 }
 ```
 
-### マイグレーション実行
+## マイグレーション実行
 
 ```bash
 docker compose exec app php src/artisan migrate
