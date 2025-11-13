@@ -103,11 +103,20 @@ class MemoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 詳細画面
+     * 
+     * Memo $memo でモデルが自動的に読み込まれる
+     * → ルートモデルバイディングってやつ
+     * 
+     * ルートモデルバイディング :
+     *   パラメータ名＝モデル名（小文字）
+     *     Model: Memo
+     *     パラメータ名: {memo}
+     *     Controller: show(Memo $memo)
      */
     public function show(Memo $memo)
     {
-        //
+        return view('memos.show', compact('memo'));
     }
 
     /**

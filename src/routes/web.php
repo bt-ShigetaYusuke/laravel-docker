@@ -20,5 +20,9 @@ Route::get('/', function () {
  * 
  * Route::get('memos/search', [MemoController::class, 'search'])->name('memos.search');
  * → /memos/search にアクセスしたら → search()が実行されるって感じ
+ * 
+ * ルートモデルバインディング
+ * → GET /memos/{memo} → memos.show
+ * ここで {memo} って名前が Memo $memo と一致している
  */
 Route::resource('memos', MemoController::class);

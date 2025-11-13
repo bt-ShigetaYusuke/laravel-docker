@@ -59,30 +59,31 @@ mysql> show create table memos;
 
 ## 流れ
 
-- モデル & リソースコントローラー & マイグレーション
-- マイグレーション編集
-- マイグレーション実行
-- モデル設定
-- ルーティング
-- 一覧
+- [x] モデル & リソースコントローラー & マイグレーション
+- [x] マイグレーション編集
+- [x] マイグレーション実行
+- [x] モデル設定
+- [x] ルーティング
+- [x] 一覧
   - コントローラ実装
   - ビュー作成
     - ベースレイアウト
     - 共通フォーム
     - 一覧
   - 表示確認
-- 新規作成
+- [x] 新規作成
   - コントローラ実装
   - ビュー作成
     - 新規作成
-- 編集
+- [ ] 編集
   - コントローラ実装
   - ビュー作成
     - 編集
-- 詳細
+- [ ] 詳細
   - コントローラ実装
   - ビュー作成
     - 詳細
+- [ ] 削除
 
 ## モデル & リソースコントローラー & マイグレーション
 
@@ -103,11 +104,6 @@ docker compose exec app php src/artisan migrate
 
 ```php
 // app/Http/Controllers/MemoController.php
-
-public function show(\App\Models\Memo $memo)
-{
-    return view('memos.show', compact('memo'));
-}
 
 public function edit(\App\Models\Memo $memo)
 {
@@ -149,30 +145,6 @@ public function destroy(\App\Models\Memo $memo)
 @endsection
 ```
 
-### 詳細
-
-```php
-// resources/views/memos/show.blade.php
-@extends('layouts.app')
-@section('title',$memo->title)
-@section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="h3 m-0">{{ $memo->title }}</h1>
-  <div class="d-flex gap-2">
-    <a class="btn btn-sm btn-primary" href="{{ route('memos.edit', $memo) }}">編集</a>
-    <form method="POST" action="{{ route('memos.destroy', $memo) }}"
-          onsubmit="return confirm('削除する？')">
-      @csrf
-      @method('DELETE')
-      <button class="btn btn-sm btn-danger">削除</button>
-    </form>
-  </div>
-</div>
-<pre class="p-3 bg-white border rounded" style="white-space: pre-wrap;">{{ $memo->content }}</pre>
-<a href="{{ route('memos.index') }}" class="btn btn-secondary mt-3">一覧へ</a>
-@endsection
-```
-
 ## ビルドキャッシュ
 
 ```
@@ -181,3 +153,48 @@ docker compose exec app php src/artisan route:clear
 docker compose exec app php src/artisan config:clear
 docker compose exec app php src/artisan view:clear
 ```
+
+# 命名について
+
+## モデルは単数形
+
+- モデル : 単数形（1 件を表す）
+- テーブル : 複数形（複数のレコードを持つ）
+
+だから
+
+- Model → Memo
+- Table → memos
+
+が自然
+
+## Controller も単数形
+
+```
+モデル名 + Controller
+```
+
+が基本だから、
+
+- Model : Memo
+- Controller : MemoController
+- Resources Routes : /memos
+- Route Model Binding : {memo}
+
+のセットで噛み合う
+
+# Cake との違い
+
+## 1 件のレコードの扱い方
+
+| 概念           | CakePHP        | Laravel                        |
+| -------------- | -------------- | ------------------------------ |
+| 1 レコード     | **Entity**     | **Model（Eloquent Instance）** |
+| クエリ実行担当 | **Table**      | **Model（Eloquent Builder）**  |
+| バリデーション | Table          | FormRequest / Model            |
+| 保存           | Table → Entity | Model の save()                |
+
+CakePHP → 「データは Entity、操作は Table でやる。
+Laravel → 「モデルが全部管理する」
+
+みたいなイメージ。
