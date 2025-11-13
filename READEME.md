@@ -215,3 +215,38 @@ docker compose exec -u www-data app php src/artisan cache:table
 docker compose exec -u www-data app php src/artisan session:table  # 既にあるならOK、無ければ作られる
 docker compose exec -u www-data app php src/artisan migrate
 ```
+
+# mac で開発環境構築
+
+## git clone
+
+```bash
+git clone https://github.com/bt-ShigetaYusuke/laravel-docker.git
+
+git remote add origin https://github.com/bt-ShigetaYusuke/laravel-docker.git
+
+# 最新ブランチに切り替え
+```
+
+## プロジェクト直下で
+
+```bash
+# 初回ビルド＆起動
+docker compose up -d --build
+
+# .env を編集
+cp .env.example .env
+
+docker compose exec app bash
+
+cd /var/www/html/src
+
+composer install
+
+exit
+
+docker compose exec app php src/artisan key:generate
+docker compose exec app php src/artisan migrate
+```
+
+- [動作確認](#動作確認)
