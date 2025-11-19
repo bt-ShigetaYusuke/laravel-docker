@@ -99,7 +99,7 @@ class MemoController extends Controller
          * セッションに一時的なメッセージを保存し、
          * リダイレクト先ページでこれを使ってアラートを表示できる
          */
-        return redirect()->route('memos.index')->with('success', '作成したよ');
+        return redirect()->route('memos.index')->with('success', '作成成功');
     }
 
     /**
@@ -120,26 +120,52 @@ class MemoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 編集画面
+     * 
+     * ここでもルートモデルバインディングを使用
      */
     public function edit(Memo $memo)
     {
-        //
+        return view('memos.edit', compact('memo'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * 更新処理
+     * 
+     * フォームから送られてきたデータが $request
+     * URL の {memo} が自動でモデル化されて $memo に入ってくる（ルートモデルバインディング）
      */
     public function update(Request $request, Memo $memo)
     {
-        //
+        $validated = $request->validate([
+            'title'   => ['required', 'string', 'max:100'],
+            'content' => ['nullable', 'string'],
+        ]);
+
+        /**
+         * モデルに対して更新処理をぶち込む
+         * 
+         * $validated のキーが Memo モデルの fillable とかに対応してたら
+         * そのままDB更新
+         */
+        $memo->update($validated);
+        return redirect()->route('memos.index')->with('success', '更新成功');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 削除処理
+     * 
+     * URL の {memo} を元に、対象の Memo モデルが $memo に自動で入ってくる
+     * → ルートモデルバインディング
      */
     public function destroy(Memo $memo)
     {
-        //
+        /**
+         * $memo が指しているレコードをそのまま削除する
+         * 
+         * DBから直接消えるやつ
+         */
+        $memo->delete();
+        return redirect()->route('memos.index')->with('success', '削除成功');
     }
 }

@@ -64,26 +64,14 @@ mysql> show create table memos;
 - [x] マイグレーション実行
 - [x] モデル設定
 - [x] ルーティング
-- [x] 一覧
-  - コントローラ実装
-  - ビュー作成
-    - ベースレイアウト
-    - 共通フォーム
-    - 一覧
-  - 表示確認
-- [x] 新規作成
-  - コントローラ実装
-  - ビュー作成
-    - 新規作成
-- [ ] 編集
-  - コントローラ実装
-  - ビュー作成
-    - 編集
-- [ ] 詳細
-  - コントローラ実装
-  - ビュー作成
-    - 詳細
-- [ ] 削除
+- [ ] コントローラー
+- ビュー作成
+  - [x] ベースレイアウト
+  - [x] 共通フォーム
+  - [x] 一覧画面
+  - [x] 新規作成画面
+  - [ ] 編集画面
+  - [ ] 詳細画面
 
 ## モデル & リソースコントローラー & マイグレーション
 
@@ -105,11 +93,6 @@ docker compose exec app php src/artisan migrate
 ```php
 // app/Http/Controllers/MemoController.php
 
-public function edit(\App\Models\Memo $memo)
-{
-    return view('memos.edit', compact('memo'));
-}
-
 public function update(Request $request, \App\Models\Memo $memo)
 {
     $validated = $request->validate([
@@ -129,21 +112,6 @@ public function destroy(\App\Models\Memo $memo)
 ```
 
 ## ビュー作成
-
-### 編集
-
-```php
-// resources/views/memos/edit.blade.php
-@extends('layouts.app')
-@section('title','メモ編集')
-@section('content')
-<h1 class="h3 mb-3">メモ編集</h1>
-<form method="POST" action="{{ route('memos.update', $memo) }}">
-  @method('PUT')
-  @include('memos._form', ['memo' => $memo])
-</form>
-@endsection
-```
 
 ## ビルドキャッシュ
 
