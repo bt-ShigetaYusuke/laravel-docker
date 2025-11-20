@@ -18,13 +18,11 @@
     <h1 class="h3 m-0">メモ一覧</h1>
 
     {{--
-    検索フォーム
-    
-    入力した文字が ?q=〇〇 の形でURLについて送信される
-
-    value="{{ $q }}" :
-  直前の検索キーワードを保持
-  --}}
+      検索フォーム
+      入力した文字が ?q=〇〇 の形でURLについて送信される
+      value="{{ $q }}" :
+      直前の検索キーワードを保持
+    --}}
     <form method="GET" class="d-flex gap-2">
       <input type="search" name="q" class="form-control" placeholder="検索…" value="{{ $q }}">
       <button class="btn btn-outline-secondary">検索</button>
@@ -32,41 +30,41 @@
   </div>
 
   {{--
-  $memos が空でなければ（=1件以上あれば）一覧を表示
---}}
+    $memos が空でなければ（=1件以上あれば）一覧を表示
+  --}}
   @if ($memos->count())
     <ul class="list-group mb-3">
       {{--
-    $memos（MemoController@indexで渡されたページネーション付きのコレクション）をループ
-  --}}
+        $memos（MemoController@indexで渡されたページネーション付きのコレクション）をループ
+      --}}
       @foreach ($memos as $memo)
         <li>
           {{--
-      /memos/{id} のURLを自動生成
-    --}}
+            /memos/{id} のURLを自動生成
+          --}}
           <a class="list-group-item list-group-item-action" href="{{ route('memos.show', $memo) }}">
             <div class="d-flex w-100 justify-content-between">
 
               {{--
-          メモのタイトル
-        --}}
+                メモのタイトル
+              --}}
               <h5 class="mb-1">{{ $memo->title }}</h5>
 
               {{--
-          メモの更新日時
+                メモの更新日時
           
-          diffForHumans() :
-            人間向け表現にしてくれるやつ
-        --}}
+                diffForHumans() :
+                人間向け表現にしてくれるやつ
+              --}}
               <small class="text-muted">{{ $memo->updated_at->diffForHumans() }}</small>
             </div>
 
             {{--
-        メモのコンテンツ
-  
-        Str::limit() :
-          文字数を制限して、末尾に ... をつける
-      --}}
+              メモのコンテンツ
+
+              Str::limit() :
+              文字数を制限して、末尾に ... をつける
+            --}}
             <p class="text-muted mb-1">{{ Str::limit($memo->content, 120) }}</p>
           </a>
       @endforeach
@@ -74,15 +72,15 @@
     </ul>
 
     {{--
-  ページネーション
+      ページネーション
   
-  ページネーションを自動生成してくれてる
---}}
+      ページネーションを自動生成してくれてる
+    --}}
     {{ $memos->links() }}
 
     {{--
-  $memos が空
---}}
+      $memos が空
+    --}}
   @else
     <p class="text-muted">まだメモがないよ。右上から作成してみて！</p>
   @endif

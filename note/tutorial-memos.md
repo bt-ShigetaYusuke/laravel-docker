@@ -4,49 +4,67 @@
 
 ## 画面一覧
 
-- `/memos : メモ一覧画面`
-- `/memos/create : 新規メモ作成画面`
-- `/memos/{memo} : メモ詳細画面`
-- `/memos/{memo}/edit : メモ編集画面`
+- [/memos] メモ一覧画面
+- [/memos/create] 新規メモ作成画面
+- [/memos/{memo}] メモ詳細画面
+- [/memos/{memo}/edit] メモ編集画面
 
 ## 画面遷移図
 
-### `/memos : メモ一覧画面`
+### [/memos] メモ一覧画面
 
-- `/memos` に直接アクセス
+- 直接アクセス
 
-### `/memos/create : 新規メモ作成画面`
+### [/memos/create] 新規メモ作成画面
 
-- `新規作成` リンク押下でアクセス
-  - `/memos : メモ一覧画面`
-  - `/memos/create : 新規メモ作成画面`
-  - `/memos/{memo} : メモ詳細画面`
-  - `/memos/{memo}/edit : メモ編集画面`
+- [新規作成] リンク押下でアクセス
+  - [/memos] メモ一覧画面
+  - [/memos/create] 新規メモ作成画面
+  - [/memos/{memo}] メモ詳細画面
+  - [/memos/{memo}/edit] メモ編集画面
 
-### `/memos/{memo} : メモ詳細画面`
+### [/memos/{memo}] メモ詳細画面
 
-- `/memos : メモ一覧画面` からアクセス
+- [/memos] メモ一覧画面` からアクセス
 
-### `/memos/{memo}/edit : メモ編集画面`
+### [/memos/{memo}/edit] メモ編集画面
 
-- `編集` リンク押下でアクセス
-  - `/memos/{memo} : メモ詳細画面`
+- [編集] リンク押下でアクセス
+  - [/memos/{memo}] メモ詳細画面
 
 # 機能
 
 ## 機能一覧
 
-- `store : 登録処理`
-- `update : 更新処理`
-- `destroy : 削除処理`
+- [store] 登録処理
+- [update] 更新処理
+- [destroy] 削除処理
 
 ## 機能フローチャート
 
-### `store : 登録処理`
+### [store] 登録処理
 
-### `update : 更新処理`
+```
+[/memos/create] 新規メモ作成画面 を開く
+↓
+必須項目を入力
+↓
+[保存] を押下
+↓
+バリデーション
+↓
+↓ → [NG] エラーメッセージを表示
+↓
+[OK] DBに保存
+↓
+[/memos] メモ一覧画面 にリダイレクト
+↓
+Flash (success) メッセージを表示
+```
 
-### `destroy : 削除処理`
+### [update] 更新処理
+
+### [destroy] 削除処理
 
 # テーブル定義書
 
@@ -201,6 +219,8 @@ Laravel → 「モデルが全部管理する」
 
 # 処理の名前
 
+これらは決まってるらしい
+
 - 一覧 : index
 - 作成フォーム : create
 - 登録 : store
@@ -212,3 +232,5 @@ Laravel → 「モデルが全部管理する」
 ## メソッドの分け方
 
 - 画面表示と処理で、メソッドは分けたほうがいい
+
+# REST とは？
