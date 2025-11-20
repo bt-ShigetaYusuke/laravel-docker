@@ -28,7 +28,7 @@
   <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
     value="{{ old('title', $memo->title ?? '') }}" required maxlength="100">
   @error('title')
-  <div class="invalid-feedback">{{ $message }}</div>
+    <div class="invalid-feedback">{{ $message }}</div>
   @enderror
 </div>
 
@@ -41,7 +41,7 @@
   {{ old('content', $memo->content ?? '') }}
   </textarea>
   @error('content')
-  <div class="invalid-feedback">{{ $message }}</div>
+    <div class="invalid-feedback">{{ $message }}</div>
   @enderror
 </div>
 <button class="btn btn-primary">保存</button>

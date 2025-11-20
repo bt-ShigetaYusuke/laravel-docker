@@ -18,7 +18,7 @@ Laravelの「レイアウトテンプレート」
     子ビュー（個別ページ）側で @section('title', 'メモ一覧') と書くと、ここにその文字が入る
     もし指定がない場合、'App Name' がデフォルトで入る
   --}}
-  <title>@yield('title','App Name')</title>
+  <title>@yield('title', 'App Name')</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -45,8 +45,8 @@ Laravelの「レイアウトテンプレート」
     {{--
       セッションに 'success' メッセージが入ってるとき表示する要素
     --}}
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+    @if (session('success'))
+      <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     {{--

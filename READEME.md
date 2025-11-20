@@ -250,3 +250,8 @@ docker compose exec app php src/artisan migrate
 ```
 
 - [動作確認](#動作確認)
+
+# vscode 拡張機能
+
+- Laravel Blade Snippets
+- Laravel Blade formatter
