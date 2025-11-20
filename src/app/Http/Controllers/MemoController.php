@@ -62,6 +62,33 @@ class MemoController extends Controller
     }
 
     /**
+     * 詳細画面
+     * 
+     * Memo $memo でモデルが自動的に読み込まれる
+     * → ルートモデルバイディングってやつ
+     * 
+     * ルートモデルバイディング :
+     *   パラメータ名＝モデル名（小文字）
+     *     Model: Memo
+     *     パラメータ名: {memo}
+     *     Controller: show(Memo $memo)
+     */
+    public function show(Memo $memo)
+    {
+        return view('memos.show', compact('memo'));
+    }
+
+    /**
+     * 編集画面
+     * 
+     * ここでもルートモデルバインディングを使用
+     */
+    public function edit(Memo $memo)
+    {
+        return view('memos.edit', compact('memo'));
+    }
+
+    /**
      * 新しいメモをDBに保存する処理
      * 
      * Request $request :
@@ -100,33 +127,6 @@ class MemoController extends Controller
          * リダイレクト先ページでこれを使ってアラートを表示できる
          */
         return redirect()->route('memos.index')->with('success', '作成成功');
-    }
-
-    /**
-     * 詳細画面
-     * 
-     * Memo $memo でモデルが自動的に読み込まれる
-     * → ルートモデルバイディングってやつ
-     * 
-     * ルートモデルバイディング :
-     *   パラメータ名＝モデル名（小文字）
-     *     Model: Memo
-     *     パラメータ名: {memo}
-     *     Controller: show(Memo $memo)
-     */
-    public function show(Memo $memo)
-    {
-        return view('memos.show', compact('memo'));
-    }
-
-    /**
-     * 編集画面
-     * 
-     * ここでもルートモデルバインディングを使用
-     */
-    public function edit(Memo $memo)
-    {
-        return view('memos.edit', compact('memo'));
     }
 
     /**

@@ -15,7 +15,7 @@
 @section('content')
 
 {{--
-  
+
 --}}
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -39,43 +39,43 @@
   $memos が空でなければ（=1件以上あれば）一覧を表示
 --}}
 @if($memos->count())
-<div class="list-group mb-3">
-
+<ul class="list-group mb-3">
   {{--
     $memos（MemoController@indexで渡されたページネーション付きのコレクション）をループ
   --}}
   @foreach($memos as $memo)
-
-  {{--
-    /memos/{id} のURLを自動生成
-  --}}
-  <a class="list-group-item list-group-item-action" href="{{ route('memos.show',$memo) }}">
-    <div class="d-flex w-100 justify-content-between">
-
-      {{--
-        メモのタイトル
-      --}}
-      <h5 class="mb-1">{{ $memo->title }}</h5>
-
-      {{--
-        メモの更新日時
-        
-        diffForHumans() :
-          人間向け表現にしてくれるやつ
-      --}}
-      <small class="text-muted">{{ $memo->updated_at->diffForHumans() }}</small>
-    </div>
-
+  <li>
     {{--
-      メモのコンテンツ
-
-      Str::limit() :
-        文字数を制限して、末尾に ... をつける
+      /memos/{id} のURLを自動生成
     --}}
-    <p class="mb-1 text-muted">{{ Str::limit($memo->content, 120) }}</p>
-  </a>
-  @endforeach
-</div>
+    <a class="list-group-item list-group-item-action" href="{{ route('memos.show',$memo) }}">
+      <div class="d-flex w-100 justify-content-between">
+
+        {{--
+          メモのタイトル
+        --}}
+        <h5 class="mb-1">{{ $memo->title }}</h5>
+
+        {{--
+          メモの更新日時
+          
+          diffForHumans() :
+            人間向け表現にしてくれるやつ
+        --}}
+        <small class="text-muted">{{ $memo->updated_at->diffForHumans() }}</small>
+      </div>
+
+      {{--
+        メモのコンテンツ
+  
+        Str::limit() :
+          文字数を制限して、末尾に ... をつける
+      --}}
+      <p class="mb-1 text-muted">{{ Str::limit($memo->content, 120) }}</p>
+    </a>
+    @endforeach
+  </li>
+</ul>
 
 {{--
   ページネーション

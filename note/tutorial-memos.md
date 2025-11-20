@@ -1,11 +1,77 @@
+# documents
+
+# 画面
+
+## 画面一覧
+
+- `/memos : メモ一覧画面`
+- `/memos/create : 新規メモ作成画面`
+- `/memos/{memo} : メモ詳細画面`
+- `/memos/{memo}/edit : メモ編集画面`
+
+## 画面遷移図
+
+### `/memos : メモ一覧画面`
+
+- `/memos` に直接アクセス
+
+### `/memos/create : 新規メモ作成画面`
+
+- `新規作成` リンク押下でアクセス
+  - `/memos : メモ一覧画面`
+  - `/memos/create : 新規メモ作成画面`
+  - `/memos/{memo} : メモ詳細画面`
+  - `/memos/{memo}/edit : メモ編集画面`
+
+### `/memos/{memo} : メモ詳細画面`
+
+- `/memos : メモ一覧画面` からアクセス
+
+### `/memos/{memo}/edit : メモ編集画面`
+
+- `編集` リンク押下でアクセス
+  - `/memos/{memo} : メモ詳細画面`
+
+# 機能
+
+## 機能一覧
+
+- `store : 登録処理`
+- `update : 更新処理`
+- `destroy : 削除処理`
+
+## 機能フローチャート
+
+### `store : 登録処理`
+
+### `update : 更新処理`
+
+### `destroy : 削除処理`
+
+# テーブル定義書
+
+# 変数定義書
+
+# テストケース
+
 # 変更ファイルリスト
 
-- `src/database/migrations/2025_11_12_052231_create_memos_table.php`
-- `src/app/Models/Memo.php`
-- `src/app/Http/Controllers/MemoController.php`
-- `src/resources/views/layouts/memo.blade.php`
-- `src/resources/views/memos/_form.blade.php`
-- `src/resources/views/memos/index.blade.php`
+`git diff --name-only origin/main`
+
+```
+READEME.md
+note/tutorial-memos.md
+src/app/Http/Controllers/MemoController.php
+src/app/Models/Memo.php
+src/database/migrations/2025_11_12_052231_create_memos_table.php
+src/resources/views/layouts/memos.blade.php
+src/resources/views/memos/_form.blade.php
+src/resources/views/memos/create.blade.php
+src/resources/views/memos/edit.blade.php
+src/resources/views/memos/index.blade.php
+src/resources/views/memos/show.blade.php
+src/routes/web.php
+```
 
 # mysql
 
@@ -64,14 +130,14 @@ mysql> show create table memos;
 - [x] マイグレーション実行
 - [x] モデル設定
 - [x] ルーティング
-- [ ] コントローラー
+- [x] コントローラー
 - ビュー作成
   - [x] ベースレイアウト
   - [x] 共通フォーム
   - [x] 一覧画面
   - [x] 新規作成画面
-  - [ ] 編集画面
-  - [ ] 詳細画面
+  - [x] 編集画面
+  - [x] 詳細画面
 
 ## モデル & リソースコントローラー & マイグレーション
 
@@ -86,40 +152,6 @@ docker compose exec app php src/artisan make:model Memo -mcr
 
 ```bash
 docker compose exec app php src/artisan migrate
-```
-
-## コントローラ実装
-
-```php
-// app/Http/Controllers/MemoController.php
-
-public function update(Request $request, \App\Models\Memo $memo)
-{
-    $validated = $request->validate([
-        'title'   => ['required','string','max:100'],
-        'content' => ['nullable','string'],
-    ]);
-
-    $memo->update($validated);
-    return redirect()->route('memos.index')->with('success', '更新したよ');
-}
-
-public function destroy(\App\Models\Memo $memo)
-{
-    $memo->delete();
-    return redirect()->route('memos.index')->with('success', '削除したよ');
-}
-```
-
-## ビュー作成
-
-## ビルドキャッシュ
-
-```
-# ルーティング追加後にキャッシュ系使ってる場合はクリア
-docker compose exec app php src/artisan route:clear
-docker compose exec app php src/artisan config:clear
-docker compose exec app php src/artisan view:clear
 ```
 
 # 命名について
@@ -166,3 +198,17 @@ CakePHP → 「データは Entity、操作は Table でやる。
 Laravel → 「モデルが全部管理する」
 
 みたいなイメージ。
+
+# 処理の名前
+
+- 一覧 : index
+- 作成フォーム : create
+- 登録 : store
+- 詳細表示 : show
+- 編集フォーム : edit
+- 更新 : update
+- 削除 : destroy
+
+## メソッドの分け方
+
+- 画面表示と処理で、メソッドは分けたほうがいい
