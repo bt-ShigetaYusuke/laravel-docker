@@ -75,15 +75,126 @@ Flash (success) メッセージを表示
 
 ### [update] 更新処理
 
-```
-
+```md
+[/memos/{memo}/edit] メモ編集画面 を開く
+↓
+必須項目を入力
+↓
+[保存] を押下
+↓
+↓ → [NG] エラーメッセージを表示
+↓
+[OK] DB 更新
+↓
+[/memos] メモ一覧画面 にリダイレクト
+↓
+Flash (success) メッセージを表示
 ```
 
 ### [destroy] 削除処理
 
+```md
+[/memos/{memo}] メモ詳細画面 を開く
+↓
+[削除] リンクを押下
+↓
+確認ダイアログが表示される
+↓
+↓ → [キャンセル] → [削除] リンクを押下する前に戻る
+↓
+[OK] DB からレコードを直接削除
+↓
+[/memos] メモ一覧画面 にリダイレクト
+↓
+Flash (success) メッセージを表示
+```
+
 # テーブル定義書
 
+## memos
+
+### テーブル概要
+
+- テーブル名（物理） : memos
+- テーブル名（論理） : メモ情報
+- 用途 : ユーザーが作成したメモを保存するテーブル
+
+### カラム定義
+
+1. id
+   - [LogicalName] ID
+   - [Type-------] bigint, unsigned
+   - [Length/Size] -
+   - [NULL-------] NG
+   - [Key--------] PK
+   - [Default----] auto_increment
+2. title
+   - [LogicalName] タイトル
+   - [Type-------] varchar(100)
+   - [Length/Size] 100
+   - [NULL-------] NG
+   - [Key--------] -
+   - [Default----] -
+3. content
+   - [LogicalName] 内容
+   - [Type-------] text
+   - [Length/Size] -
+   - [NULL-------] OK
+   - [Key--------] -
+   - [Default----] -
+4. created_at
+   - [LogicalName] 作成日時
+   - [Type-------] timestamp
+   - [Length/Size] -
+   - [NULL-------] OK
+   - [Key--------] -
+   - [Default----] NULL
+5. updated_at
+   - [LogicalName] 更新日時
+   - [Type-------] timestamp
+   - [Length/Size] -
+   - [NULL-------] OK
+   - [Key--------] -
+   - [Default----] NULL
+
+### キー・インデックス情報
+
+- PK：id
+- FK：なし
+- インデックス：特になし（必要なら title に追加検討）
+
+### 補足
+
+- Laravel の timestamps による更新管理
+- 論理削除（deleted_at）は無し
+- タイトルは 100 文字まで
+- content は長文対応の text 型
+- bigint, unsigned = 0 ~ でかい正の数
+- PK = Primary Key = 重複禁止, NULL 禁止, そのレコードを一意に特定できる
+- auto_increment = レコードを追加するたびに数字を自動で増やしてくれる仕組み
+
 # 変数定義書
+
+- [$q]
+  - [LogicalName] クエリパラメーター
+  - [Type-------] string
+  - [Purpose----] 検索キーワード
+- [$memos]
+  - [LogicalName] メモ一覧（検索条件つき）のコレクション
+  - [Type-------] object
+  - [Purpose----] 一覧表示用のメモデータ
+- [$memo]
+  - [LogicalName] 単体 Memo
+  - [Type-------]
+  - [Purpose----] ルートモデルバインディングで渡される単体 Memo
+- [$request]
+  - [LogicalName] HTTP リクエスト
+  - [Type-------]
+  - [Purpose----]
+- [$validated]
+  - [LogicalName] バリデーション済みの入力データ
+  - [Type-------]
+  - [Purpose----]
 
 # テストケース
 
@@ -249,3 +360,7 @@ Laravel → 「モデルが全部管理する」
 - 画面表示と処理で、メソッドは分けたほうがいい
 
 # REST とは？
+
+# debug
+
+- app/Services/DebugService.php 作成
