@@ -256,95 +256,113 @@ docker compose exec app php src/artisan migrate
 - Laravel Blade Snippets
 - Laravel Blade formatter
 
-# リリース
+# Xserver + Laravel + GitHub Actions 自動デプロイ手順まとめ
 
-- main に push したら GitHub Actions で Xserver に自動デプロイ
+## 用意しておくもの、前提
 
-## イメージ
+- Xserver
+  - サーバー ID
+  - パスワード
+  - SSH を ON にする
+  - 国外 IP 制限を OFF にする
+  - 公開鍵を登録（ローカルの鍵）
+    - SSH でログインできる状態になる
+- MySQL
+  - DB 名
+  - DB ユーザー
+  - パスワード
+  - ホスト名
 
-- GitHub の main に push したら…
-- GitHub Actions が走って…
-- SSH + rsync で Xserver にコードを自動アップロード
-- Xserver 側では .env で MySQL に接続 & Laravel が動く
+## 手順
 
-## Xserver
-
-### 秘密鍵ダウンロード
-
-1. サーバーパネル
-2. SSH 設定
-3. 公開鍵を登録
-   [登録方式] 自動
-   [ラベル] `2025-11-23-23-46`
-   [パスフレーズ] 設定しない
-   → 登録して秘密鍵をダウンロードする
-
-### 接続情報を取得
-
-- サーバー ID
-- サーバー番号（ホスト名）: 例）
-- SSH ポート: 通常
-
-あとで Github Secret に入れる
-
-- SSH_USERNAME = サーバー ID
-- SSH_HOST = sv◯◯◯◯.xserver.jp
-- SSH_PORT = 10022
-
-### DB 設定
-
-- データベース > MySQL 設定
-- データベースを追加
-- ユーザー追加
-- 追加したユーザーに、追加したデータベースのアクセス権を付与
-
-## ディレクトリ構成
+1. Xserver に SSH で入る
 
 ```
-/home/サーバーID/
-  └── example.com/
-        ├── public_html/   ← 公開ディレクトリ（ブラウザから見える）
-        └── laravel-docker/       ← ここにLaravel本体を置く想定
-            └── src/
-                 ├── app/
-                 ├── config/
-                 ├── public/ ...
+ssh -i ~/.ssh/your_key.key your_user@svxxxx.xserver.jp -p 10022
 ```
 
-## Xserver に Laravel をセットアップ
+2. PHP のバージョンを 8.2 に固定
 
-- ダウンロードした.key ファイルを ~/.ssh に移動
-- 権限変更 chmod 600 ~/.ssh/xyusukex622x.key
-- ssh -i で Xserver にログイン
-- github からリポジトリを clone
-  `[xyusukex622x@sv13105 yusuke-shigeta.com]$ git clone https://github.com/bt-ShigetaYusuke/laravel-docker.git`
-- public_html 削除 ← これ大丈夫？
-- rm -rf public_html
-- ln -s ってなに？
-  - ln -s /home/xyusukex622x/yusuke-shigeta.com/laravel-docker/src/public public_html
-- echo 'alias php=/opt/php-8.1/bin/php' >> ~/.bashrc
-- source ~/.bashrc
-- php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-- mkdir -p $HOME/bin
-- php composer-setup.php --install-dir=$HOME/bin --filename=composer
-- $HOME/bin/composer -V
-- cd /home/xyusukex622x/yusuke-shigeta.com/laravel-docker/src
-- cp .env.example .env
-- php や composer の バージョン合わせるためにあれこれやる
-- .env の設定を合わせる
-- php artisan config:clear
-- php artisan cache:clear
-- php artisan config:cache
+```
+echo "alias php='/opt/php-8.2.28/bin/php'" >> ~/.bashrc
+source ~/.bashrc
+$HOME/bin/composer -V
+```
 
-# Github Actions で自動デプロイ設定
+3. プロジェクトの配置確認
 
-- GitHub のリポジトリ → Settings → Secrets and variables → Actions → New repository secret
+```
+/home/ユーザー/yusuke-shigeta.com/
+  ├── laravel-docker/              ← GitHubからclone
+  │     └── src/                   ← Laravelルート
+  │          ├── app
+  │          ├── public
+  │          ├── …
+  └── public_html -> laravel-docker/src/public
+```
 
-- SSH_PRIVATE_KEY
-  → Xserver からダウンロードした XXXX.key の中身をコピペ（-----BEGIN OPENSSH PRIVATE KEY----- 〜 -----END... まで全部）
-- SSH_USERNAME → サーバー ID（例：xs123456）
-- SSH_HOST → svXXXX.xserver.jp
-- SSH_PORT → 10022
-- REMOTE_PATH → /home/xyusukex622x/yusuke-shigeta.com/laravel-docker/src
-- .github/workflows/deploy.yml 作成
-- Xserver の ssh 設定で、国外アクセス制限 = OFF
+4. クリーンに clone
+
+```
+cd ~/yusuke-shigeta.com
+git clone https://github.com/bt-ShigetaYusuke/laravel-docker.git
+```
+
+5. composer インストール
+
+```
+cd laravel-docker/src
+php $HOME/bin/composer install --no-dev --optimize-autoloader
+```
+
+6. .env 設定
+
+```
+cp .env.example .env
+vi .env
+```
+
+7. APP_KEY 生成
+
+```
+php artisan key:generate
+```
+
+10. DB マイグレート
+
+```
+php artisan config:clear
+php artisan key:generate
+php artisan cache:clear
+php artisan migrate --force
+```
+
+11. 権限設定
+
+```
+chmod -R 775 storage bootstrap/cache
+find public -type d -exec chmod 755 {} \;
+find public -type f -exec chmod 644 {} \;
+```
+
+12. public_html を Laravel の public にリンク
+
+```
+cd ~/yusuke-shigeta.com
+rm -f public_html
+ln -s ~/yusuke-shigeta.com/laravel-docker/src/public public_html
+```
+
+13. GitHub Actions の設定（自動デプロイ）
+
+```
+SSH_PRIVATE_KEY
+SSH_USERNAME
+SSH_HOST
+SSH_PORT
+REMOTE_PATH
+
+を設定
+```
+
+14. deploy.yml 作成
