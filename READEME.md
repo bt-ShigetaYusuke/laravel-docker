@@ -255,3 +255,94 @@ docker compose exec app php src/artisan migrate
 
 - Laravel Blade Snippets
 - Laravel Blade formatter
+
+# リリース
+
+- main に push したら GitHub Actions で Xserver に自動デプロイ
+
+## イメージ
+
+- GitHub の main に push したら…
+- GitHub Actions が走って…
+- SSH + rsync で Xserver にコードを自動アップロード
+- Xserver 側では .env で MySQL に接続 & Laravel が動く
+
+## Xserver
+
+### 秘密鍵ダウンロード
+
+1. サーバーパネル
+2. SSH 設定
+3. 公開鍵を登録
+   [登録方式] 自動
+   [ラベル] `2025-11-23-23-46`
+   [パスフレーズ] 設定しない
+   → 登録して秘密鍵をダウンロードする
+
+### 接続情報を取得
+
+- サーバー ID
+- サーバー番号（ホスト名）: 例）
+- SSH ポート: 通常
+
+あとで Github Secret に入れる
+
+- SSH_USERNAME = サーバー ID
+- SSH_HOST = sv◯◯◯◯.xserver.jp
+- SSH_PORT = 10022
+
+### DB 設定
+
+- データベース > MySQL 設定
+- データベースを追加
+- ユーザー追加
+- 追加したユーザーに、追加したデータベースのアクセス権を付与
+
+## ディレクトリ構成
+
+```
+/home/サーバーID/
+  └── example.com/
+        ├── public_html/   ← 公開ディレクトリ（ブラウザから見える）
+        └── laravel-docker/       ← ここにLaravel本体を置く想定
+            └── src/
+                 ├── app/
+                 ├── config/
+                 ├── public/ ...
+```
+
+## Xserver に Laravel をセットアップ
+
+- ダウンロードした.key ファイルを ~/.ssh に移動
+- 権限変更 chmod 600 ~/.ssh/xyusukex622x.key
+- ssh -i で Xserver にログイン
+- github からリポジトリを clone
+  `[xyusukex622x@sv13105 yusuke-shigeta.com]$ git clone https://github.com/bt-ShigetaYusuke/laravel-docker.git`
+- public_html 削除 ← これ大丈夫？
+- rm -rf public_html
+- ln -s ってなに？
+  - ln -s /home/xyusukex622x/yusuke-shigeta.com/laravel-docker/src/public public_html
+- echo 'alias php=/opt/php-8.1/bin/php' >> ~/.bashrc
+- source ~/.bashrc
+- php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+- mkdir -p $HOME/bin
+- php composer-setup.php --install-dir=$HOME/bin --filename=composer
+- $HOME/bin/composer -V
+- cd /home/xyusukex622x/yusuke-shigeta.com/laravel-docker/src
+- cp .env.example .env
+- php や composer の バージョン合わせるためにあれこれやる
+- .env の設定を合わせる
+- php artisan config:clear
+- php artisan cache:clear
+- php artisan config:cache
+
+# Github Actions で自動デプロイ設定
+
+- GitHub のリポジトリ → Settings → Secrets and variables → Actions → New repository secret
+
+- SSH_PRIVATE_KEY
+  → Xserver からダウンロードした XXXX.key の中身をコピペ（-----BEGIN OPENSSH PRIVATE KEY----- 〜 -----END... まで全部）
+- SSH_USERNAME → サーバー ID（例：xs123456）
+- SSH_HOST → svXXXX.xserver.jp
+- SSH_PORT → 10022
+- REMOTE_PATH → /home/xyusukex622x/yusuke-shigeta.com/laravel-docker/src

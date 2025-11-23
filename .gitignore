@@ -46,3 +46,6 @@ docker-compose.override.yml
 # Composer / npm lock (プロジェクト運用方針で判断)
 # /src/composer.lock
 # /src/package-lock.json
+
+# note
+/note/ignore.md
