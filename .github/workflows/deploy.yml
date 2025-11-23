@@ -20,8 +20,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20" # package.json に合わせて調整してOK
-          cache: "npm"
+          node-version: "20"
+          # どっちか好きな方
+          # パターンA: cacheなし
+          # cache: 'npm'
+          # cache-dependency-path: './src/package-lock.json'
 
       - name: Install frontend dependencies
         working-directory: ./src
