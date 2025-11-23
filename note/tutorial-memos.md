@@ -30,7 +30,7 @@
 ### [/memos/{memo}] メモ詳細画面
 
 ```md
-[/memos] メモ一覧画面を開く
+[/memos] **メモ一覧画面を開く**
 ↓
 [memo] リンクを押下でアクセス
 ```
@@ -305,7 +305,9 @@ docker compose exec app php src/artisan make:model Memo -mcr
 docker compose exec app php src/artisan migrate
 ```
 
-# 命名について
+# 勉強
+
+## 命名について
 
 ## モデルは単数形
 
@@ -334,7 +336,7 @@ docker compose exec app php src/artisan migrate
 
 のセットで噛み合う
 
-# Cake との違い
+## Cake との違い
 
 ## 1 件のレコードの扱い方
 
@@ -350,7 +352,7 @@ Laravel → 「モデルが全部管理する」
 
 みたいなイメージ。
 
-# 処理の名前
+## 処理の名前
 
 これらは決まってるらしい
 
@@ -366,7 +368,7 @@ Laravel → 「モデルが全部管理する」
 
 - 画面表示と処理で、メソッドは分けたほうがいい
 
-# REST とは？
+## REST とは？
 
 # debug
 
