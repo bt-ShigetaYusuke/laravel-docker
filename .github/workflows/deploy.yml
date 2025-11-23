@@ -3,7 +3,7 @@ name: Deploy to Xserver
 on:
   push:
     branches:
-      - main # mainにpushされたときに起動
+      - main
 
 permissions:
   contents: read
@@ -17,6 +17,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20" # package.json に合わせて調整してOK
+          cache: "npm"
+
+      - name: Install frontend dependencies
+        working-directory: ./src
+        run: npm ci
+
+      - name: Build frontend assets (Vite)
+        working-directory: ./src
+        run: npm run build
+
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -25,6 +39,7 @@ jobs:
       - name: Deploy with rsync to Xserver
         run: |
           rsync -avz --delete \
+            --exclude='.env' \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='node_modules/' \
