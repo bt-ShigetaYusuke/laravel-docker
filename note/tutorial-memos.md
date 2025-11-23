@@ -198,6 +198,10 @@ Flash (success) メッセージを表示
 
 # テストケース
 
+## 画面別
+
+### [/memos] メモ一覧画面
+
 # 変更ファイルリスト
 
 `git diff --name-only origin/main`
@@ -207,6 +211,8 @@ READEME.md
 note/tutorial-memos.md
 src/app/Http/Controllers/MemoController.php
 src/app/Models/Memo.php
+src/app/Providers/AppServiceProvider.php
+src/app/Services/DebugService.php
 src/database/migrations/2025_11_12_052231_create_memos_table.php
 src/resources/views/layouts/memos.blade.php
 src/resources/views/memos/_form.blade.php
@@ -214,6 +220,7 @@ src/resources/views/memos/create.blade.php
 src/resources/views/memos/edit.blade.php
 src/resources/views/memos/index.blade.php
 src/resources/views/memos/show.blade.php
+src/resources/views/welcome.blade.php
 src/routes/web.php
 ```
 
@@ -364,3 +371,8 @@ Laravel → 「モデルが全部管理する」
 # debug
 
 - app/Services/DebugService.php 作成
+
+# ページネーション
+
+- src/app/Providers/AppServiceProvider.php
+  - ブーストラップ用のページネーションに変更。デフォルトではテイルウィンドウらしい。
