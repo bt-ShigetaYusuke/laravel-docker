@@ -346,3 +346,5 @@ docker compose exec app php src/artisan migrate
 - SSH_HOST → svXXXX.xserver.jp
 - SSH_PORT → 10022
 - REMOTE_PATH → /home/xyusukex622x/yusuke-shigeta.com/laravel-docker/src
+- .github/workflows/deploy.yml 作成
+- Xserver の ssh 設定で、国外アクセス制限 = OFF
