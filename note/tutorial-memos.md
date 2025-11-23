@@ -376,3 +376,14 @@ Laravel → 「モデルが全部管理する」
 
 - src/app/Providers/AppServiceProvider.php
   - ブーストラップ用のページネーションに変更。デフォルトではテイルウィンドウらしい。
+
+# scss
+
+- `npm install -D sass`
+- [resources/scss/memo/style.scss] 作成
+- blade で読み込む
+  - `@vite('resources/scss/memo/style.scss')`
+- ビルド
+  - `npm run dev`
+- 本番では
+  - `npm run build`
