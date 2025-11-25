@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Memo;
-use Illuminate\Http\Request;
+use App\Http\Requests\MemoRequest;
 use App\Services\DebugService;
 
 class MemoController extends Controller
@@ -95,21 +95,8 @@ class MemoController extends Controller
      * Request $request :
      *   フォームから送られてきたHTTPリクエストをLaravelが自動で渡してくれる
      */
-    public function store(Request $request)
+    public function store(MemoRequest $request)
     {
-        /**
-         * バリデーション
-         * 
-         * エラーがあると自動で前のページへリダイレクトして
-         * エラーメッセージをセッションに保存する
-         * 
-         * OKならバリデーション済みデータだけを $validated に返す
-         */
-        $validated = $request->validate([
-            'title'   => ['required', 'string', 'max:100'],
-            'content' => ['nullable', 'string'],
-        ]);
-
         /**
          * DBに保存
          * 
@@ -119,7 +106,7 @@ class MemoController extends Controller
          * create() は「Laravelが用意したEloquentの標準メソッド」で、
          * 「新しいレコードをサクッと作成するための便利ショートカット」
          */
-        \App\Models\Memo::create($validated);
+        Memo::create($request->validated());
 
         /**
          * /memos へリダイレクトする
@@ -136,20 +123,15 @@ class MemoController extends Controller
      * フォームから送られてきたデータが $request
      * URL の {memo} が自動でモデル化されて $memo に入ってくる（ルートモデルバインディング）
      */
-    public function update(Request $request, Memo $memo)
+    public function update(MemoRequest $request, Memo $memo)
     {
-        $validated = $request->validate([
-            'title'   => ['required', 'string', 'max:100'],
-            'content' => ['nullable', 'string'],
-        ]);
-
         /**
          * モデルに対して更新処理をぶち込む
          * 
          * $validated のキーが Memo モデルの fillable とかに対応してたら
          * そのままDB更新
          */
-        $memo->update($validated);
+        $memo->update($request->validated());
         return redirect()->route('memos.index')->with('success', '更新成功');
     }
 
