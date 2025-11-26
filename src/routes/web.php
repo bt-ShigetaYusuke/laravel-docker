@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\MemoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OkozukaiController;
+use App\Http\Controllers\OkozukaiBalanceController;
+use App\Http\Controllers\OkozukaiHistoryController;
 
 /**
  * トップページ
@@ -26,3 +29,17 @@ Route::get('/', function () {
  * ここで {memo} って名前が Memo $memo と一致している
  */
 Route::resource('memos', MemoController::class);
+
+Route::prefix('okozukai')->name('okozukai.')->group(function () {
+    Route::get('/', [OkozukaiController::class, 'index'])->name('index');
+    Route::post('/spend', [OkozukaiController::class, 'store'])->name('spend');
+
+    Route::get('/balance', [OkozukaiBalanceController::class, 'index'])->name('balance');
+
+    // ⭐ 月初ボタン押下時の処理
+    Route::post('/balance/monthly-close', [OkozukaiBalanceController::class, 'monthlyClose'])
+        ->name('balance.monthly_close');
+
+    Route::get('/history', [OkozukaiHistoryController::class, 'index'])->name('history');
+    Route::delete('/history/{expense}', [OkozukaiHistoryController::class, 'destroy'])->name('history.destroy');
+});
