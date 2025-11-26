@@ -282,7 +282,8 @@
 - [ ] 履歴画面
   - コントローラー
   - ビュー
-- 月次サマリで貯金額を管理
+- 月初ボタンで貯金管理
+- ユーザー認証
 
 ## マイグレーション
 
@@ -322,6 +323,111 @@ php artisan make:model OkozukaiMonthlySummary
 php artisan make:controller OkozukaiController
 php artisan make:controller OkozukaiBalanceController
 php artisan make:controller OkozukaiHistoryController
+```
+
+## ユーザー認証
+
+1. Laravel に「認証まわりのひな形」を入れる（Breeze 使うのが一番ラクらしい）
+2. /login / /register 画面を自動生成
+3. ログインしてないと /okozukai 系に入れないようにする
+4. ログイン後の遷移先を /okozukai にする
+
+```md
+# 1. 認証ひな形を入れる（Laravel Breeze）
+
+1. コンテナ入る
+   docker compose exec app bash
+   cd src
+
+2. Breeze インストール
+   composer require laravel/breeze --dev
+
+3. Blade 版で scaffolding 生成
+   php artisan breeze:install blade
+
+   /login
+   /register
+   /forgot-password
+   /reset-password
+   とか一式、routes・controller・view がドバッと生える。
+
+4. フロントのビルド
+   npm run dev
+   失敗したら
+   npm install
+
+5. マイグレーション users テーブル
+   php artisan migrate
+
+# 2. ログイン後の遷移先を「おこづかいトップ」に変える
+
+デフォだと /dashboard に飛ぶようになってるから、
+これを /okozukai に変える。
+
+[src/app/Http/Controllers/Auth/AuthenticatedSessionController.php] [store] でリダイレクト先変更
+
+これで：
+ログイン直後
+新規登録直後
+のリダイレクト先が /okozukai になる ✨
+
+# 3. おこづかい画面を「ログイン必須」にする
+
+routes/web.php の okozukai グループを auth ミドルウェアで囲む。
+
+Route::middleware('auth')->prefix('okozukai')->name('okozukai.')->group(function () {
+Route::get('/', [OkozukaiController::class, 'index'])->name('index');
+Route::post('/spend', [OkozukaiController::class, 'store'])->name('spend');
+
+    Route::get('/balance', [OkozukaiBalanceController::class, 'index'])->name('balance');
+
+    Route::get('/history', [OkozukaiHistoryController::class, 'index'])->name('history');
+    Route::delete('/history/{expense}', [OkozukaiHistoryController::class, 'destroy'])->name('history.destroy');
+
+    Route::post('/balance/monthly-close', [OkozukaiBalanceController::class, 'monthlyClose'])
+        ->name('balance.monthly_close');
+
+});
+
+これで：
+
+ログインしてない人が /okozukai 開く
+→ 自動で /login に飛ばされる
+ログインすると /okozukai に戻ってくる
+
+って流れになる。
+
+# 4. 画面からログイン/ログアウトできるようにしとく
+
+Breeze がヘッダーやナビを用意してくれてるから、
+レイアウトを resources/views/layouts/app.blade.php に寄せていくのがおすすめ。
+
+とりあえず「どっかにログアウトボタン欲しいな〜」ってなったら、
+おこづかいのレイアウトにこれ足せば OK👇
+
+<form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <button type="submit">ログアウト</button>
+</form>
+
+# 5. ログイン画面の URL 確認
+
+Breeze 入れたら、標準でこれが使えるようになってる 👇
+
+ログイン … /login
+新規登録 … /register
+
+ブラウザで叩いて、画面出るかチェックしてみてー。
+
+ここまでできたら…
+
+未ログインだと /okozukai 系に入れない
+ログインすると /okozukai に飛ぶ
+1 ユーザーごとのおこづかい管理に育てていける
+
+ってとこまで来てる
+
+ユーザーごとにおこづかい別管理（テーブルに user_id カラム足す）にしたい
 ```
 
 # 変更ファイル

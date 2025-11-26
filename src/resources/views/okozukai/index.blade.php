@@ -24,6 +24,10 @@
 
     <button type="submit">保存</button>
   </form>
+  <form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <button type="submit">ログアウト</button>
+  </form>
 </body>
 
 </html>
