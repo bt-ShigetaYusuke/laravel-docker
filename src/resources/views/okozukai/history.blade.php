@@ -1,19 +1,11 @@
+@extends('layouts.okozukai')
+@section('title', 'okozukai-history')
+
 @php
   $runningTotal = 0;
 @endphp
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>履歴画面</title>
-</head>
-
-<body>
-  {{-- resources/views/okozukai/history.blade.php --}}
-
+@section('content')
   <h1>収支履歴</h1>
 
   @if (session('success'))
@@ -55,7 +47,7 @@
       <tr>
         <th>日付</th>
         <th>金額</th>
-        <th>累計（その月の支出合計）</th>
+        <th>当月累計</th>
         <th>カテゴリ</th>
         <th>操作</th>
       </tr>
@@ -89,12 +81,4 @@
   </table>
 
   {{ $expenses->links() }}
-
-  <hr>
-
-  <a href="{{ route('okozukai.index') }}">トップに戻る</a>
-  <a href="{{ route('okozukai.balance') }}">残高を見る</a>
-
-</body>
-
-</html>
+@endsection

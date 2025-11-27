@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.okozukai')
+@section('title', 'okozukai-top')
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>トップページ</title>
-</head>
-
-<body>
+@section('content')
   <h1>今月の支出合計：{{ number_format($monthlyTotal) }}円</h1>
 
   <form action="{{ route('okozukai.spend') }}" method="POST">
@@ -24,10 +18,4 @@
 
     <button type="submit">保存</button>
   </form>
-  <form method="POST" action="{{ route('logout') }}">
-    @csrf
-    <button type="submit">ログアウト</button>
-  </form>
-</body>
-
-</html>
+@endsection

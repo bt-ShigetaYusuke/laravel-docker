@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.okozukai')
+@section('title', 'okozukai-balance')
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>残高画面</title>
-</head>
-
-<body>
-  {{-- resources/views/okozukai/balance.blade.php --}}
-
+@section('content')
   <h1>残高画面</h1>
 
   @if (session('success'))
@@ -48,13 +40,4 @@
       </form>
     @endif
   </div>
-
-  <hr>
-
-  <a href="{{ route('okozukai.index') }}">トップに戻る</a>
-  <a href="{{ route('okozukai.history') }}">履歴を見る</a>
-
-
-</body>
-
-</html>
+@endsection
