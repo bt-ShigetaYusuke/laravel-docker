@@ -19,7 +19,7 @@
     @if ($alreadyClosed)
       <p>この月はすでに月次サマリ作成済みです。</p>
     @else
-      <form method="POST" action="{{ route('okozukai.balance.monthly_close') }}"
+      <form method="POST" action="{{ route('okozukai.setting.monthly_close') }}"
         onsubmit="return confirm('{{ $closeTargetLabel }} の月次サマリを作成します。よろしいですか？');">
         @csrf
         <button type="submit">月初ボタンを押す</button>
