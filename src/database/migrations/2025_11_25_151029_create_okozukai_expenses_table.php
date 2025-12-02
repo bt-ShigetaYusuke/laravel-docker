@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('okozukai_expenses', function (Blueprint $table) {
             $table->id();
-            $table->date('spent_at'); // 支出した日付を保存するカラム
+            // 支出した日付を保存するカラム
+            $table->date('spent_at');
             $table->integer('amount'); // 使った金額を保存する整数のカラム
             /**
              * okozukai_category_id という外部キー（カテゴリ ID）を持つ

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OkozukaiController;
 use App\Http\Controllers\OkozukaiBalanceController;
 use App\Http\Controllers\OkozukaiHistoryController;
+use App\Http\Controllers\OkozukaiSettingController;
 
 /**
  * トップページ
@@ -64,8 +65,9 @@ Route::middleware('auth')->prefix('okozukai')->name('okozukai.')->group(function
     Route::get('/history', [OkozukaiHistoryController::class, 'index'])->name('history');
     Route::delete('/history/{expense}', [OkozukaiHistoryController::class, 'destroy'])->name('history.destroy');
 
-    Route::post('/balance/monthly-close', [OkozukaiBalanceController::class, 'monthlyClose'])
-        ->name('balance.monthly_close');
+    Route::get('/setting', [OkozukaiSettingController::class, 'index'])->name('setting');
+    Route::post('/setting/monthly-close', [OkozukaiSettingController::class, 'monthlyClose'])
+        ->name('setting.monthly_close');
 });
 
 require __DIR__ . '/auth.php';

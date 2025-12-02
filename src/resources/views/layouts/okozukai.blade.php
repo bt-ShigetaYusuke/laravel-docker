@@ -14,7 +14,10 @@
       <a href="{{ route('okozukai.index') }}" class="header__logo">okozukai</a>
     </div>
   </header>
-  @yield('content')
+  <h1 class="page-title">@yield('page-title', 'Page Title')</h1>
+  <div class="page-content page-content--@yield('page-content-class')">
+    @yield('content')
+  </div>
   <footer class="footer">
     <div class="footer__inner">
       <nav class="footer__nav">
@@ -22,6 +25,7 @@
           <li class="footer__navItem"><a href="{{ route('okozukai.index') }}" class="footer__navLink">T</a></li>
           <li class="footer__navItem"><a href="{{ route('okozukai.balance') }}" class="footer__navLink">B</a></li>
           <li class="footer__navItem"><a href="{{ route('okozukai.history') }}" class="footer__navLink">H</a></li>
+          <li class="footer__navItem"><a href="{{ route('okozukai.setting') }}" class="footer__navLink">S</a></li>
         </ul>
       </nav>
     </div>

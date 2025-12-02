@@ -28,7 +28,7 @@ class OkozukaiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'spent_at' => ['required', 'date'],
+            // 'spent_at' => ['required', 'date'],
             'amount' => ['required', 'integer', 'min:1'],
             'okozukai_category_id' => ['nullable', 'exists:okozukai_categories,id'],
         ]);

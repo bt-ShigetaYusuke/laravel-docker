@@ -8,11 +8,13 @@
 
 ## main
 
+[main-okozukai-db](https://phpmyadmin-sv13105.xserver.jp/)
 [main-okozukai-top](https://yusuke-shigeta.com/okozukai)
 
 ## dev
 
 [dev-okozukai-top](http://localhost:1025/okozukai)
+[dev-okozukai-top](http://localhost:3035/)
 
 # 画面
 
