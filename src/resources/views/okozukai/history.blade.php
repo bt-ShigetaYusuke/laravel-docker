@@ -60,7 +60,7 @@
           $runningTotal += $expense->amount;
         @endphp
         <tr class="history-table__row">
-          <td class="history-table__cell history-table__cell--spent_at">{{ $expense->spent_at->format('d日') }}</td>
+          <td class="history-table__cell history-table__cell--spent_at">{{ $expense->spent_at->format('d') }}</td>
           <td class="history-table__cell history-table__cell--amount">{{ number_format($expense->amount) }} 円</td>
           <td class="history-table__cell history-table__cell--runningTotal">{{ number_format($runningTotal) }} 円</td>
           <td class="history-table__cell">{{ optional($expense->category)->name ?? 'なし' }}</td>

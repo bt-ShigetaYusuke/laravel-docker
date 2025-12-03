@@ -13,10 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('okozukai_expenses', function (Blueprint $table) {
-            $table->id();
             // 支出した日付を保存するカラム
+            $table->id();
             $table->date('spent_at');
-            $table->integer('amount'); // 使った金額を保存する整数のカラム
+            // 使った金額を保存する整数のカラム
+            $table->integer('amount');
             /**
              * okozukai_category_id という外部キー（カテゴリ ID）を持つ
              * nullable() → カテゴリ未選択でも OK

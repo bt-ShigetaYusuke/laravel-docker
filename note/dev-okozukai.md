@@ -420,18 +420,5 @@ git diff --name-only origin/main
 ```
 
 ```
-note/dev-okozukai.md
-src/app/Http/Controllers/OkozukaiBalanceController.php
-src/app/Http/Controllers/OkozukaiController.php
-src/app/Http/Controllers/OkozukaiHistoryController.php
-src/app/Models/OkozukaiCategory.php
-src/app/Models/OkozukaiExpense.php
-src/app/Models/OkozukaiMonthlySummary.php
-src/database/migrations/2025_11_25_151000_create_okozukai_categories_table.php
-src/database/migrations/2025_11_25_151029_create_okozukai_expenses_table.php
-src/database/migrations/2025_11_25_151037_create_okozukai_monthly_summaries_table.php
-src/resources/views/okozukai/balance.blade.php
-src/resources/views/okozukai/history.blade.php
-src/resources/views/okozukai/index.blade.php
-src/routes/web.ph
+
 ```
