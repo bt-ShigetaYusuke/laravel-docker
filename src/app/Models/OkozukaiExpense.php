@@ -67,4 +67,34 @@ class OkozukaiExpense extends Model
     {
         return $this->belongsTo(OkozukaiCategory::class, 'okozukai_category_id');
     }
+
+    /**
+     * 当月の支出合計を取得する
+     * 
+     * 【スコープメソッド】
+     * scopeXXXX と名づけるって決まってる
+     * 
+     * スコープ = Model に“クエリの定型パターン”を追加する機能
+     * 呼び出す時は ->monthlyTotal()
+     */
+    public function scopeMonthlyTotal($query, $date)
+    {
+        /**
+         * 今月の初日を計算
+         * 
+         * ->copy() → 同じ日時の別インスタンスを作る
+         * ->startOfMonth() → そのインスタンスの日付を月初に変更
+         * ->toDateString() → 文字列に変換
+         * 
+         * $today->startOfMonth();
+         * → これだと、$today自体の中身も変わっちゃうらしい。
+         *   copy()で元の$todayを守ってくれてる
+         */
+        $start = $date->copy()->startOfMonth();
+
+        // 今月の末日を計算
+        $end = $date->copy()->endOfMonth();
+
+        return $query->whereBetween('spent_at', [$start, $end])->sum('amount');
+    }
 }

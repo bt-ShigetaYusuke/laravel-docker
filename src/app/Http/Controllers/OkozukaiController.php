@@ -9,27 +9,50 @@ use Carbon\Carbon;
 
 class OkozukaiController extends Controller
 {
+    /**
+     * 支出入力画面
+     */
     public function index()
     {
-        $today = Carbon::today();
-        // $today = Carbon::parse('2025-12-01');
-        $startOfMonth = $today->copy()->startOfMonth()->toDateString();
-        $endOfMonth   = $today->copy()->endOfMonth()->toDateString();
+        /**
+         * 今月の支出合計
+         * 
+         * 【Carbon でできること】
+         * - 今日の日付欲しい
+         * - 今月の1日目欲しい
+         * - 来週の日付欲しい
+         * - 日付を + 3日 したい
+         * - フォーマットを変えたい
+         */
+        $monthlyTotal = OkozukaiExpense::monthlyTotal(Carbon::today());
 
-        // 今月の支出合計
-        $monthlyTotal = OkozukaiExpense::whereBetween('spent_at', [$startOfMonth, $endOfMonth])
-            ->sum('amount');
-
+        /**
+         * カテゴリ全部
+         * 
+         * カテゴリ全部を取得
+         */
         $categories = OkozukaiCategory::all();
 
-        return view('okozukai.index', compact('monthlyTotal', 'categories'));
+        return view('okozukai.index', compact(
+            'monthlyTotal',
+            'categories',
+        ));
     }
 
+    /**
+     * 登録
+     * 
+     * 支出登録処理
+     */
     public function store(Request $request)
     {
         $request->validate([
             // 'spent_at' => ['required', 'date'],
+
+            // 必須 & 数値 1 以上
             'amount' => ['required', 'integer', 'min:1'],
+
+            // 任意, カテゴリIDが存在しない場合はエラー
             'okozukai_category_id' => ['nullable', 'exists:okozukai_categories,id'],
         ]);
 
@@ -39,6 +62,6 @@ class OkozukaiController extends Controller
             'okozukai_category_id' => $request->okozukai_category_id,
         ]);
 
-        return redirect()->route('okozukai.index')->with('success', '登録したよ！');
+        return redirect()->route('okozukai.index')->with('success', 'success!');
     }
 }
