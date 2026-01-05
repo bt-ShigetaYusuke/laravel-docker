@@ -81,5 +81,5 @@
     </tbody>
   </table>
 
-  {{ $expenses->links() }}
+  {{-- {{ $expenses->links() }} --}}
 @endsection

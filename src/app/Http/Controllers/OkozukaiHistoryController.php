@@ -30,7 +30,9 @@ class OkozukaiHistoryController extends Controller
             $query->where('okozukai_category_id', $categoryId);
         }
 
-        $expenses = $query->paginate(20)->withQueryString();
+        // $expenses = $query->paginate(20)->withQueryString();
+        // 全件取得させとく。ページネーション一旦不要。
+        $expenses = $query->get();
 
         $categories = OkozukaiCategory::all();
 
