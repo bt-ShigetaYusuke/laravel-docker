@@ -17,27 +17,23 @@
   <p>今月の予算：{{ number_format($budget) }} 円</p>
   --}}
 
-  <div class="balance">
-    <h2 class="balance__month">{{ now()->format('n') }}月</h2>
-    <ul class="balance__list">
-      <li class="balance__item">
-        <span class="balance__label">支出合計：</span>
-        <span class="balance__value">{{ number_format($totalSpentThisMonth) }}&nbsp;円</span>
-      </li>
-      <li class="balance__item">
-        <span class="balance__label">残り金額：</span>
-        <span class="balance__value">{{ number_format($remaining) }}&nbsp;円</span>
+  <div class="spent">
+    <h2 class="spent__month">{{ now()->format('n') }}月</h2>
+    <ul class="spent__list">
+      <li class="spent__item">
+        <span class="spent__label">支出合計：</span>
+        <span class="spent__value">{{ number_format($totalSpentThisMonth) }}&nbsp;円</span>
       </li>
     </ul>
   </div>
 
   <hr>
 
-  <div class="saving">
-    <ul class="saving__list">
-      <li class="saving__item">
-        <span class="saving__label">貯金額：</span>
-        <span class="saving__value">{{ number_format($totalSaving) }}&nbsp;円</span>
+  <div class="balance">
+    <ul class="balance__list">
+      <li class="balance__item">
+        <span class="balance__label">残り金額：</span>
+        <span class="balance__value">{{ number_format($remaining) }}&nbsp;円</span>
       </li>
     </ul>
   </div>

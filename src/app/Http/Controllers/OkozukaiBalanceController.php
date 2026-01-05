@@ -20,10 +20,10 @@ class OkozukaiBalanceController extends Controller
         $totalSpentThisMonth = OkozukaiExpense::whereBetween('spent_at', [$startOfMonth, $endOfMonth])
             ->sum('amount');
 
-        $remaining = $budget - $totalSpentThisMonth;
-
         // 貯金額 = これまでの total_saving の最大値
         $totalSaving = OkozukaiMonthlySummary::max('total_saving') ?? 0;
+
+        $remaining = ($budget - $totalSpentThisMonth) + $totalSaving;
 
         // 月初ボタンで「締める対象の月」（＝前月）
         $targetForClose = $today->copy()->subMonth();
